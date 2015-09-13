@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" ng-app='todo'>
+<!--  ng-app defines which portion of the html that our JS will be applied to. In this case, we're adding it to the <html>, so we extend our JS functionality to the entire DOM. The domain of the directive begins and ends with the opening and closing tags of the HTML element the directive is defined in.-->
+<head>
+ <meta charset="UTF-8">
+ <title>Angular Lesson</title>
+ <script src="bower_components/jquery/dist/jquery.min.js"></script>
+ <script src="bower_components/angular/angular.min.js"></script>
+ <script src="js/app.js"></script>
+ <script src="js/controllers/todos.js"></script>
+</head>
+<body>
+
+  <div ng-controller="todosController as todosCtrl">
+    <!-- We use the ng-controller directive in order to isntantiate the controller in the DOM.
+    It establishes the domain in this div -->
+    <!-- todosCtrl is an instance of the controller. This whole div has access to all values and methods defined in the ctonroller. This instance of a controller is called a ViewModel. We can use it to access functions and properties defined in the controller -->
+    <!-- Everytime we load the DOM we create a new View Model based on the functionality defined in the controller. -->
+    <div ng-repeat="todo in todosCtrl.todos">
+
+      <div ng-show="!editTodo">
+        <!-- ng-repeat establishes a scope for editTodo. If we had set an editTodo variable in our controller, then any time we clicked on one, all of the edit forms would open. Because we never instantiated editTodo it by default is undefined, which is falsey. So we use !editTodo so that we show them initially. We're using the scope of the ng-repeat to our advantage because there is a new scope for each iteration. -->
+
+        <p>{{$index+1}}. {{todo.task}}</p>
+        <p>Deadline: {{todo.deadline}}</p>
+      </div>
+
+
+      <button class="edit" ng-click="todosCtrl.edit($index); editTodo = !editTodo; deleteTodo = !deleteTodo">Edit Task</button>
+      <form ng-show="editTodo" ng-submit="todosCtrl.update($index); editTodo = !editTodo">
+        <label>Task</label><br>
+        <input type="text" name="content" ng-model="todosCtrl.task"><br>
+        <label>Deadline</label><br>
+        <input type="text" name="content" ng-model="todosCtrl.deadline"><br>
+        <input type="submit">
+      </form>
+
+      <button class="delete" ng-show="!deleteTodo" ng-click="todosCtrl.delete($index)">Delete Task</button>
+
+    </div>
+
+    <hr>
+    <div ng-click="todosCtrl.toggleForm()">New Task</div>
+    <form ng-show="todosCtrl.formIsVisible" ng-submit="todosCtrl.create()">
+      <!-- ng-show adds a display:none using CSS if something is false, and display:block if true -->
+      <label>Task</label><br>
+      <input type="text" name="content" ng-model="todosCtrl.task"><br>
+      <label>Deadline</label><br>
+      <input type="text" name="content" ng-model="todosCtrl.deadline"><br>
+      <input type="submit">
+    </form>
+
+  </div>
+
+</body>
+</html>
